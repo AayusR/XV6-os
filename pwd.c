@@ -48,7 +48,6 @@ static int getcwd(char* resultPath) {
       return NULL;
   
     if (st.ino == ino) {
-      // No parent directory exists: must be the root.
       return resultPath;
     }
   
@@ -59,8 +58,7 @@ static int getcwd(char* resultPath) {
       if (p != NULL) {
         strcpy(p, PATH_SEPARATOR);
         p += sizeof(PATH_SEPARATOR) - 1;
-  
-        // Find current directory.
+
         if (dirlookup(fd, ino, p))
           foundPath = p + strlen(p);
       }
@@ -69,9 +67,6 @@ static int getcwd(char* resultPath) {
     return foundPath;
   }
 
-// @param fd   file descriptor for a directory.
-// @param ino  target inode number.
-// @param p    [out] file name (part of absPath), overwritten by the file name of the ino.
 static int dirlookup(int fd, int ino, char* p) {
     struct dirent de;
     while (read(fd, &de, sizeof(de)) == sizeof(de)) {
@@ -85,4 +80,3 @@ static int dirlookup(int fd, int ino, char* p) {
     }
     return FALSE;
   }
-  
